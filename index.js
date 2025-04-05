@@ -102,3 +102,5 @@ server.listen(3000, () =>{
     console.log("server sucessfully run");
 })
 
+const mongoose= require('mongoose');
+
