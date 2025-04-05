@@ -1,0 +1,8 @@
+[
+  {
+    "rollNo": 2,
+    "firstName": "abhi",
+    "lastName": "singh",
+    "course": "B.tech"
+  }
+]
