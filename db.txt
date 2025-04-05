@@ -4,5 +4,17 @@
     "firstName": "abhi",
     "lastName": "singh",
     "course": "B.tech"
+  },
+  {
+    "rollNo": 3,
+    "firstName": "abhijeet",
+    "lastName": "singh",
+    "course": "B.tech"
+  },
+  {
+    "rollNo": 4,
+    "firstName": "abhinav",
+    "lastName": "singh",
+    "course": "B.tech"
   }
 ]
