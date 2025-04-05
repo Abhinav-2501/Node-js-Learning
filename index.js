@@ -7,9 +7,11 @@
 
 const express = require("express");
 const fs = require("fs");
-
+const Product  = require('./models/product.model.js');
 const server = express();
-server.use(express.json());
+
+server.use(express.json()); //this is done as we are not allowed to pass Json so we kindof use this Middleware
+
 
 const user = JSON.parse(fs.readFileSync("db.txt", 'utf-8'));
 // get api
@@ -98,9 +100,36 @@ server.put("/api/v1/:id", (req, res)=>{
 })
 
 
-server.listen(3000, () =>{
-    console.log("server sucessfully run");
-})
+// server.listen(3000, () =>{
+//     console.log("server sucessfully run");
+// })
+
+server.get('/',(req,res)=>{
+    res.send("Hello this is my learning");
+});
+
+// server.get('/abhi',(req,res)=>{
+//     res.send("Hello this is my Abhinav");
+// });
+
+server.post('/api/products',async (req,res)=> {  // async humesha funtion se pehle hota hai aur es case me callback funtion ye hai 
+    try{
+       const product = await Product.create(req.body);
+       res.status(200).json(product);
+    }catch(error){
+        res.status(500).json({message: error.message});
+    }
+    // console.log(req.body);
+    // res.send(req.body);
+});
 
 const mongoose= require('mongoose');
-
+mongoose.connect("mongodb+srv://abhinavtripathi080:abhinav1234@backenddb.tys8rpb.mongodb.net/Node-API?retryWrites=true&w=majority&appName=BackendDB")
+.then(()=>{console.log("conected to database");
+    server.listen(3000,()=>{
+        console.log("server is running on port 3000")
+    })
+})
+.catch(()=>{
+    console.log("Not connceted");
+})
