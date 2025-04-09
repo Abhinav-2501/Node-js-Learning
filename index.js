@@ -1,35 +1,40 @@
 const express = require("express");
-const fs = require("fs");
-const Product  = require('./models/product.model.js');
+const Product = require('./models/product.model.js');
+const productRoute = require('./routes/product.route.js');
+const dbConnection = require("./Database/db.js");
+const requestLogger = require('./middleware/requestLogger.js');
+const errorLogger = require('./middleware/errorLogger.js');
+
+require('dotenv').config();
+
 const server = express();
-const productRoute = require('./routes/product.route.js')
 
-require('dotenv').config();  //This is for .env file 
+// Middleware order is important
+// 1. Body parser middleware
+server.use(express.json());
 
+// 2. Request logger middleware (before routes)
+server.use(requestLogger);
 
-//middleware
-server.use(express.json()); //this is done as we are not allowed to pass Json so we kindof use this Middleware
+// 3. Routes
+server.use('/api/products', productRoute);
 
+server.get('/', (req, res) => {
+  res.send("Hello this is my learning");
+});
 
-// Routes 
-server.use('/api/products',productRoute);
+// 4. 404 handler for undefined routes
+server.use((req, res, next) => {
+  const error = new Error(`Not Found - ${req.originalUrl}`);
+  error.statusCode = 404;
+  next(error);
+});
 
+// 5. Error logger middleware (after routes)
+server.use(errorLogger);
 
-// server.get('/',(req,res)=>{
-//     res.send("Hello this is my learning");
-// });
-
-// server.get('/abhi',(req,res)=>{
-//     res.send("Hello this is my Abhinav");
-// });
-
-const mongoose= require('mongoose');
-mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@backenddb.tys8rpb.mongodb.net/Node-API?retryWrites=true&w=majority&appName=BackendDB`)
-.then(()=>{console.log("conected to database");
-    server.listen(3000,()=>{
-        console.log("server is running on port 3000")
-    })
-})
-.catch(()=>{
-    console.log("Not connceted");
-})
+// Connect to database and start server
+server.listen(3000, () => {
+  dbConnection();
+  console.log("Server is running on port 3000");
+});

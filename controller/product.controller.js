@@ -1,77 +1,72 @@
 const Product = require('../models/product.model.js');
+const asyncHandler = require('express-async-handler');
 
-const getProducts = async(req,res)=>{
-    try{
-            const product = await Product.find({});
-            res.status(200).json(product);
-        }catch(error){
-            res.status(500).json({message : error.message})
-        }
-    }
+// Using consistent error handling across all controllers
+const getProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({});
+  res.status(200).json(products);
+});
 
-const getById = async(req,res)=>{
-    try{
-        const{id} = req.params;
-        const product = await Product.findById(id);
-        res.status(200).json(product);
-    }catch(error){
-        res.status(500).json({message : error.message});
-    }
-}
+const getById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+  if (!product) {
+    res.status(404);
+    throw new Error(`Product with id ${id} not found`);
+  }
+  res.status(200).json(product);
+});
 
-const getByName = async(req,res)=>{
-    const{name} = req.params;
-    try{
-        const product = await Product.find({name});
-        res.status(200).json(product);
-    }catch(error){
-        res.status(500).json({message : error.message})
-    }
-}
+const getByName = asyncHandler(async (req, res) => {
+  const { name } = req.params;
+  const products = await Product.find({ name });
+  res.status(200).json(products);
+});
 
-const createProduct = async(req,res)=>{
-    try{
-        const product = await Product.create(req.body);
-        res.status(200).json(product);
-     }catch(error){
-         res.status(500).json({message: error.message});
-     }
-}
+const createProduct = asyncHandler(async (req, res) => {
+  const product = await Product.create(req.body);
+  res.status(201).json(product);
+});
 
-const deleteProduct = async(req,res)=>{
-    try{
-        const{id} = req.params
-        const product = await Product.findById(id);
-        if(!product){
-            return res.status(404).json({message : "Product not found"});
-        }
-        const delproduct = await Product.findByIdAndDelete(id);
-        res.status(200).json({
-            message: `Product '${product.name}' is deleted successfully.`,
-            deletedProduct: product // optional: include full product info
-        });
-        // const Product = await Product.findById(id);
-    }catch(error){
-        res.status(500).json({message : error.message});
-    }
-}
- const updateProduct = async(req,res)=>{
-    try{
-        const {id} = req.params;
-        const product = await Product.findByIdAndUpdate(id,req.body)
-        if(!product){
-            return res.status(404).json({message : "Product not found"});
-        }
-        const updatedProduct = await Product.findById(id);
-        res.status(200).json(updatedProduct);  //If you dont write this line it will be updated but API will keeploading in case of success
-    }catch(error){
-        res.status(500).json({message : error.message});
-    }
-}
+const deleteProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+  if (!product) {
+    res.status(404);
+    throw new Error(`Product with id ${id} not found`);
+  }
+  await Product.findByIdAndDelete(id);
+  res.status(200).json({
+    message: `Product '${product.name}' deleted successfully.`,
+    deletedProduct: product
+  });
+});
+
+const updateProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findByIdAndUpdate(id, req.body, { new: true });
+  if (!product) {
+    res.status(404);
+    throw new Error(`Product with id ${id} not found`);
+  }
+  res.status(200).json(product);
+});
 
 const authorName = (req, res) => {
-    res.send("Hello this is my Abhinav");
+  res.send("Hello this is my Abhinav");
 };
-    module.exports = {
-        getProducts , getById , getByName , createProduct , deleteProduct ,updateProduct ,authorName
-    }
+
+const Testerror = asyncHandler(async (req, res) => {
+  throw new Error('This is a test error');
+});
+
+module.exports = {
+  getProducts,
+  getById,
+  getByName,
+  createProduct,
+  deleteProduct,
+  updateProduct,
+  authorName,
+  Testerror
+};

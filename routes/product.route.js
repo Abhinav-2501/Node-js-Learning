@@ -1,15 +1,24 @@
-const express = require ("express");
+const express = require("express");
 const router = express.Router();
-const {getProducts , getById, getByName , createProduct , deleteProduct ,updateProduct ,authorName} = require('../controller/product.controller.js')
+const {
+  getProducts,
+  getById,
+  getByName,
+  createProduct,
+  deleteProduct,
+  updateProduct,
+  authorName,
+  Testerror
+} = require('../controller/product.controller.js');
 
+// Routes using the controller methods that have error handling
 router.get('/', getProducts);
-router.get('/api/product/:id', getById);
-router.get('/api/product/name', getByName);
-router.post('/api/product',createProduct);
-router.delete('/:id' , deleteProduct);
-router.put('/:id',updateProduct);
-router.get('/abhi',authorName);   // route will be {{base_url}}api/products/abhi
- 
+router.get('/:id', getById);
+router.get('/name/:name', getByName);
+router.post('/add', createProduct);
+router.delete('/delete/:id', deleteProduct);
+router.put('/update/:id', updateProduct);
+router.get('/error/test', Testerror); // Use the controller method instead of inline function
+router.get('/abhi', authorName);
 
-
-module.exports = router ;
+module.exports = router;
