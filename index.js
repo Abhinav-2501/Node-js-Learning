@@ -4,6 +4,8 @@ const productRoute = require('./routes/product.route.js');
 const dbConnection = require("./Database/db.js");
 const requestLogger = require('./middleware/requestLogger.js');
 const errorLogger = require('./middleware/errorLogger.js');
+const authRoutes = require('./routes/auth.route.js');
+
 
 require('dotenv').config();
 
@@ -18,6 +20,8 @@ server.use(requestLogger);
 
 // 3. Routes
 server.use('/api/products', productRoute);
+server.use('/api/auth', authRoutes);
+
 
 server.get('/', (req, res) => {
   res.send("Hello this is my learning");
