@@ -5,10 +5,11 @@ const dbConnection = require("./Database/db.js");
 const requestLogger = require('./middleware/requestLogger.js');
 const errorLogger = require('./middleware/errorLogger.js');
 const authRoutes = require('./routes/auth.route.js');
-
+const authMiddleware = require("./middleware/authMiddleware");
+const router = require("./routes/auth.route.js");
 
 require('dotenv').config();
-
+router.use(authMiddleware)
 const server = express();
 
 // Middleware order is important

@@ -1,0 +1,66 @@
+🔐 JWT-Based Auth Flow (Signup + Login)
+
+🧾 SIGNUP FLOW
+
+[User submits Name, Email, Password] 
+            │
+            ▼
+[Check if User Already Exists in DB]
+            │
+     ┌──────┴──────┐
+     │             │
+ [Exists]      [Doesn't Exist]
+     │                │
+[Send 400 Error]      ▼
+                  [Hash Password using bcrypt]
+                            │
+                            ▼
+                [Create New User in DB]
+                            │
+                            ▼
+         [Generate JWT using user._id + SECRET]
+                            │
+                            ▼
+              [Return Token + User Info to Client]
+
+
+🔐 LOGIN FLOW
+
+[User submits Email & Password]
+            │
+            ▼
+     [Find user by Email in DB]
+            │
+     ┌──────┴──────┐
+     │             │
+[User Not Found] [User Found]
+     │                │
+[Send 400 Error]      ▼
+              [Compare Hashed Password with bcrypt]
+                            │
+                    ┌──────┴───────┐
+                    │              │
+           [Invalid Password]   [Match Found]
+                    │              │
+           [Send 400 Error]        ▼
+                  [Generate New JWT Token]
+                            │
+                            ▼
+              [Return Token + User Info to Client]
+
+
+🛡️ PROTECTED ROUTE FLOW
+
+[User accesses protected route with token in Authorization header]
+            │
+            ▼
+[authMiddleware extracts Bearer token]
+            │
+            ▼
+[JWT verify(token, SECRET)]
+            │
+      ┌─────┴──────┐
+      │            │
+ [Invalid]      [Valid]
+      │            │
+[Send 401]     [Attach user info to req.user & next()]
