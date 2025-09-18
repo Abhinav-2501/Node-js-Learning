@@ -1,0 +1,37 @@
+========================================
+🚦 HTTP Status Codes - Quick Revision
+========================================
+
+✅ Success
+----------------------------------------
+200 OK           → Request successful (default GET)
+201 Created      → Resource created successfully (after POST)
+204 No Content   → Request successful, but no data to return (after DELETE)
+
+🔄 Redirection
+----------------------------------------
+301 Moved Permanently → Resource has a new URL
+302 Found             → Temporary redirect
+304 Not Modified      → Use cached data (no need to resend)
+
+⚠️ Client Errors
+----------------------------------------
+400 Bad Request    → Invalid request data (missing fields, wrong format)
+401 Unauthorized   → No valid authentication (missing/invalid token)
+403 Forbidden      → Authenticated but not allowed (no permission)
+404 Not Found      → Resource doesn’t exist
+409 Conflict       → Resource conflict (e.g., duplicate email on signup)
+
+💥 Server Errors
+----------------------------------------
+500 Internal Server Error → Generic server failure
+502 Bad Gateway           → Proxy got invalid response
+503 Service Unavailable   → Server temporarily down/overloaded
+
+========================================
+ Memory Tip
+========================================
+200s = Success
+300s = Redirect/Cache
+400s = Client mistakes
+500s = Server mistakes
